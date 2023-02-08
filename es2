@@ -1,0 +1,139 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct nd1{
+    int valore;
+    struct nd1* next;
+} Nodo;
+typedef Nodo* Lista;
+
+typedef struct nd2{
+    int valore;
+    int quanteVolte;
+    struct nd2* next;
+} NodoRisultato;
+typedef NodoRisultato* ListaRisultato;
+
+Lista costruisci();
+Lista InsInFondo(Lista lista, int elem);
+void stampaLista(Lista lista);
+void stampaListaRisultato(ListaRisultato risulato);
+
+// TODO: implementazione funzione/i
+int controllaSeGiaPresente(ListaRisultato lis,int elem);
+int controllaQuantaPresenza(Lista lis,int elem);
+ListaRisultato f(Lista lis);
+ListaRisultato InsInFondoLisOfRis(ListaRisultato lista,int elem,int quanteVolte);
+
+int main(){
+    Lista lista;
+    lista = costruisci();
+    printf("Lista in input:\n");
+    stampaLista(lista);
+
+    ListaRisultato risultato;
+
+    // TODO: chiamata funzione/i
+    risultato=f(lista);
+    printf("Lista corretta:\n");
+    stampaListaRisultato(risultato);
+
+    return 0;
+}
+
+ListaRisultato f(Lista lis)
+{
+    ListaRisultato lisRis=NULL;
+    if(lis==NULL)
+        return NULL;
+    while (lis!=NULL) {
+        if(controllaSeGiaPresente(lisRis, lis->valore)!=0){
+            lisRis=InsInFondoLisOfRis(lisRis, lis->valore, controllaQuantaPresenza(lis, lis->valore));
+        }
+        lis=lis->next;
+    }
+    return lisRis;
+}
+int controllaQuantaPresenza(Lista lis,int elem)
+{
+    int cont=0;
+    if(lis==NULL)
+        return 0;
+    while (lis!=NULL) {
+        if(lis->valore==elem)
+            cont++;
+        lis=lis->next;
+    }
+    return cont;
+}
+int controllaSeGiaPresente(ListaRisultato lis,int elem)
+{
+    if(lis==NULL)
+        return 1;
+    while (lis!=NULL) {
+        if(lis->valore==elem)
+            return 0;
+        lis=lis->next;
+    }
+    return 1;
+}
+ListaRisultato InsInFondoLisOfRis( ListaRisultato lista,int elem,int quanteVolte ) {
+    ListaRisultato punt;
+    if( lista==NULL ) {
+        punt = malloc( sizeof(NodoRisultato) );
+        punt->next = NULL;
+        punt->valore = elem;
+        punt->quanteVolte=quanteVolte;
+        return punt;
+    } else {
+        lista->next = InsInFondoLisOfRis( lista->next, elem,quanteVolte );
+        return lista;
+    }
+}
+Lista costruisci(){
+    Lista lista = NULL;
+    lista = InsInFondo(lista, 3);
+    lista = InsInFondo(lista, 5);
+    lista = InsInFondo(lista, 1);
+    lista = InsInFondo(lista, 4);
+    lista = InsInFondo(lista, 3);
+    lista = InsInFondo(lista, 4);
+    lista = InsInFondo(lista, 3);
+    lista = InsInFondo(lista, 4);
+    lista = InsInFondo(lista, 1);
+    lista = InsInFondo(lista, 8);
+    return lista;
+}
+
+Lista InsInFondo(Lista lista, int elem){
+    if(lista==NULL){
+        Nodo* punt;
+        punt = (Nodo*) malloc(sizeof(Nodo));
+        punt->valore = elem;
+        punt->next   = NULL;
+        return punt;
+    } else {
+        lista->next = InsInFondo(lista->next, elem);
+        return lista;
+    }
+}
+
+void stampaLista(Lista lista){
+    if(lista == NULL){
+        printf("=||\n");
+        return;
+    } else {
+        printf("%d -> ", lista->valore);
+        stampaLista(lista->next);
+    }
+}
+
+void stampaListaRisultato(ListaRisultato risultato){
+    if(risultato == NULL){
+        printf("=||\n");
+        return;
+    } else {
+        printf("[%d (%d)] -> ", risultato->valore, risultato->quanteVolte);
+        stampaListaRisultato(risultato->next);
+    }
+}
