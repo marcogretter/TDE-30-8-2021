@@ -1,0 +1,19 @@
+ ES1:
+Scrivere in SQL l’interrogazione che estrae il cliente che ha noleggiato più CD
+ SELECT C.CfCliente
+ FROM Cliente C,Noleggio N
+ WHERE C.CodiceFiscale=N.CFCliente
+ GROUP BY N.CFCliente
+ HAVING count(*)>=ALL(SELECT count(CFCliente)
+                      FROM Noleggio
+                      GROUP BY CFCliente
+                      
+ ES2:
+ 
+Scrivere in SQL l’interrogazione che estrae per ogni CD l’ultima prenotazione:
+ SELECT CodCd,DataInizio
+ FROM Noleggio
+ GROUP BY CodCd
+ HAVING DataInizio>=ALL(SELECT N2.DataInizio
+                        FROM Noleggio N2
+                        WHERE CodCd=N2.CodCd)
